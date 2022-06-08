@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyScript Demo</title>
+  <link rel="stylesheet" href="/pyscript.css" />
+  <script defer src="/pyscript.js"></script>
+  <py-config>
+    - autoclose_loader: true
+    - runtimes:
+      - src: "./static/pyodide.js"
+        name: pyodide-0.20.1a1
+        lang: python
+  </py-config>
+  <py-env>
+    - pandas
+  </py-env>
+</head>
+<body>
+  <!-- <py-title> tag -->
+  <py-title>PyScript Playground</py-title>
+
+  <!-- <py-box> tag -->
+  <py-box widths="1/4;3/4">
+    <div><b>Today is</b></div>
+    <div id="today"></div>
+  </py-box>
+  <hr />
+  <py-box widths="1/4;3/4">
+    <div><b>System Version:</b></div>
+    <div id="sysver"></div>
+  </py-box>
+  <hr />
+  <py-box widths="1/4;3/4">
+    <div><b>PyOdide JS Version:</b></div>
+    <div id="pyodide-js-ver"></div>
+  </py-box>
+  <hr />
+
+  <!-- output -->
+  <py-script output="today">
+    import datetime
+    today = datetime.date.today().strftime('%A %B %d, %Y')
+    today
+  </py-script>
+
+  <!-- pyscript.write -->
+  <py-script>
+    import sys
+    pyscript.write('sysver', sys.version)
+  </py-script>
+
+  <!-- Element -->
+  <py-script>
+    import pyodide_js
+    elem = Element('pyodide-js-ver')
+    elem.write(pyodide_js.version)
+  </py-script>
+
+  <!-- <py-button> tag -->
+  <!-- 2022-06-07: Not Working -->
+  <py-button label="pyButton">
+    def on_click(e):
+        console.log(e)
+  </py-button>
+  <hr />
+
+  <!-- event listener with pyodide.create_proxy -->
+  <py-button id="click-me-again" label="pyButton w/ pyodide.create_proxy"></py-button>
+  <pre id="click-me-again-output"></pre>
+  <py-script>
+    import json
+    import pyodide
+    def on_click(e):
+      console.log(e)
+      pyscript.write('click-me-again-output', e, append=False)
+
+    button = document.querySelector('button#click-me-again')
+    button.addEventListener('click', pyodide.create_proxy(on_click))
+  </py-script>
+  <hr />
+
+  <!-- Hello World! -->
+  <py-script>
+    print('Hello World!')
+  </py-script>
+  <hr />
+
+  <!-- <py-repl> tag -->
+  <py-repl></py-repl>
+
+</body>
+</html>

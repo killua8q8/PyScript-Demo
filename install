@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Download PyScript Files
+echo 'Downloading PyScript files . . .'
+wget -q https://pyscript.net/alpha/pyscript.{css,js,py}
+
+# Download PyOdide Files
+mkdir static
+echo 'Downloading PyOdide files . . .'
+wget -qO- https://github.com/pyodide/pyodide/releases/download/0.20.1a1/pyodide-build-0.20.1a1.tar.bz2 | tar -C static/ --strip-components=1 pyodide -xj
+
+# Python 3 Environment
+echo 'Creating python 3 environment . . .'
+python3 -m venv venv
+
+echo
+echo 'Installation done, you may run ./debug to start a debugging server.'
